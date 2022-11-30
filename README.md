@@ -1,4 +1,4 @@
-# ZK Dark Fores using noir
+# ZK Dark Forest using noir
 
 This code use boiler plate from [Mastermind-noir](https://github.com/vezenovm/mastermind-noir).
 

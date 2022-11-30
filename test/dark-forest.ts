@@ -6,6 +6,9 @@ import { serialise_public_inputs } from '@noir-lang/aztec_backend';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { expect } from 'chai';
+import { randomInt } from 'crypto';
+
+const MAX_FIELD = 281474976710655.;
 
 type PreimgHashProofInput = {
     x: number;
@@ -18,6 +21,7 @@ type DarkForestProofIput = {
     y1: number;
     x2: number;
     y2: number;
+    salt: number;
     hash_x1_y1: string;
     hash_x2_y2: string;
 }
@@ -99,14 +103,17 @@ describe.only('DarkForest tests using typescript wrapper', function() {
     });
 
     const createProofInputDarkForest = (x1: number, y1: number, x2: number, y2: number): DarkForestProofIput => {
-      const hash_x1_y1 = bufferToHexString(pedersen.compressInputs([numberToPaddedHex(x1), numberToPaddedHex(y1)]));
-      const hash_x2_y2 = bufferToHexString(pedersen.compressInputs([numberToPaddedHex(x2), numberToPaddedHex(y2)]));
+
+      const salt = randomInt(MAX_FIELD);
+      const hash_x1_y1 = bufferToHexString(pedersen.compressInputs([numberToPaddedHex(x1), numberToPaddedHex(y1), numberToPaddedHex(salt)]));
+      const hash_x2_y2 = bufferToHexString(pedersen.compressInputs([numberToPaddedHex(x2), numberToPaddedHex(y2), numberToPaddedHex(salt)]));
 
       return {
         x1,
         y1,
         x2,
         y2,
+        salt,
         hash_x1_y1,
         hash_x2_y2,
       }
